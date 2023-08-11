@@ -1,5 +1,7 @@
 package app
 
-func NewApp() {
+import "fmt"
 
+func NewApp() {
+	fmt.Println("Application initialized")
 }
