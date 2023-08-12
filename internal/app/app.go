@@ -22,7 +22,7 @@ func NewApp() {
 	client := client.NewClient()
 	service := service.NewService(client)
 
-	currency := "EUR"
+	currency := "USD"
 	rate, err := service.GetPrivatRate(currency)
 	if err != nil {
 		log.Fatal(err)
