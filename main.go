@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/Windmill787/currency-parser/client"
+	"github.com/Windmill787/currency-parser/entities"
 	"github.com/Windmill787/currency-parser/service"
 )
 
@@ -22,11 +23,18 @@ func main() {
 	client := client.NewClient()
 	service := service.NewService(client)
 
-	currency := "USD"
+	currency := entities.USD()
 	rate, err := service.GetPrivatRate(currency)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	log.Printf("[%s] Rate for currency: %s is %.2f\n", time.Now().Format(time.ANSIC), currency, rate)
+	log.Printf("[%s] Bank={privat} currency={%s} rate={%.2f}\n", time.Now().Format(time.ANSIC), currency.Code, rate)
+
+	rate, err = service.GetMonoRate(currency)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Printf("[%s] Bank={mono} currency={%s} is rate={%.2f}\n", time.Now().Format(time.ANSIC), currency.Code, rate)
 }

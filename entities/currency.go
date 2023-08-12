@@ -1,11 +1,22 @@
 package entities
 
-type CurrencyRate struct {
-	BaseCode string
-	Code     string
-	Rate     float64
+type Currency struct {
+	Code   string
+	Number int
 }
 
-func NewCurrency(base_code, code string, rate float64) *CurrencyRate {
-	return &CurrencyRate{base_code, code, rate}
+func NewCurrency(code string, number int) *Currency {
+	return &Currency{code, number}
+}
+
+func USD() *Currency {
+	return NewCurrency("USD", 840)
+}
+
+func EUR() *Currency {
+	return NewCurrency("EUR", 978)
+}
+
+func UAH() *Currency {
+	return NewCurrency("UAH", 980)
 }

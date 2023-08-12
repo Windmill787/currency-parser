@@ -6,10 +6,29 @@ import (
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/Windmill787/currency-parser/entities"
 )
 
+var (
+	baseCurrency      = entities.UAH()
+	DefaultBankClient = &http.Client{
+		Transport: &loggerRoundTripper{
+			next:   http.DefaultTransport,
+			writer: os.Stdout,
+		},
+		Timeout: time.Second * 3,
+	}
+	availableCurrencies = []*entities.Currency{
+		entities.USD(),
+		entities.EUR(),
+	}
+)
+
+var apiUrl string
+
 type BankClient interface {
-	ParseRate(currency string) (float64, error)
+	ParseRate(currency *entities.Currency) (float64, error)
 }
 
 type MonoBankClient interface {
@@ -35,16 +54,18 @@ func (l *loggerRoundTripper) RoundTrip(r *http.Request) (*http.Response, error) 
 	return l.next.RoundTrip(r)
 }
 
-var DefaultBankClient = &http.Client{
-	Transport: &loggerRoundTripper{
-		next:   http.DefaultTransport,
-		writer: os.Stdout,
-	},
-	Timeout: time.Second * 3,
+func isCurrencyAvailable(currency *entities.Currency) bool {
+	for _, c := range availableCurrencies {
+		if *c == *currency {
+			return true
+		}
+	}
+	return false
 }
 
 func NewClient() *Client {
 	return &Client{
 		PrivatBankClient: NewPrivatClient(),
+		MonoBankClient:   NewMonoClient(),
 	}
 }

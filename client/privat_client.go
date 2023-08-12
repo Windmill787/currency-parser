@@ -6,21 +6,13 @@ import (
 	"io"
 	"net/http"
 	"time"
+
+	"github.com/Windmill787/currency-parser/entities"
 )
 
-var (
-	apiUrl              = "https://api.privatbank.ua/p24api/exchange_rates"
-	availableCurrencies = [8]string{
-		"USD",
-		"EUR",
-		"CHF",
-		"GBP",
-		"PLZ",
-		"SEK",
-		"XAU",
-		"CAD",
-	}
-)
+func init() {
+	apiUrl = "https://api.privatbank.ua/p24api/exchange_rates"
+}
 
 type privatResponse struct {
 	Date            string         `json:"date"`
@@ -49,19 +41,10 @@ func NewPrivatClient() *PrivatClient {
 	}
 }
 
-func isCurrencyAvailable(currency string) bool {
-	for _, c := range availableCurrencies {
-		if c == currency {
-			return true
-		}
-	}
-	return false
-}
-
-func (c *PrivatClient) ParseRate(currency string) (float64, error) {
+func (c *PrivatClient) ParseRate(currency *entities.Currency) (float64, error) {
 	ok := isCurrencyAvailable(currency)
 	if !ok {
-		return float64(0), fmt.Errorf("currency rate for %s is unavailable for this bank", currency)
+		return float64(0), fmt.Errorf("currency rate for %s is unavailable", currency.Code)
 	}
 
 	resp, err := c.httpClient.Get(fmt.Sprintf("%s?date=%s", apiUrl, time.Now().Format("02.01.2006")))
@@ -81,10 +64,10 @@ func (c *PrivatClient) ParseRate(currency string) (float64, error) {
 	}
 
 	for _, rate := range r.ExchangeRate {
-		if rate.Currency == currency {
+		if rate.Currency == currency.Code {
 			return rate.SaleRate, nil
 		}
 	}
 
-	return float64(0), fmt.Errorf("currency %s not found", currency)
+	return float64(0), fmt.Errorf("currency %s not found", currency.Code)
 }
