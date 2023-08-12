@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/Windmill787/currency-parser/internal/client"
+	"github.com/Windmill787/currency-parser/client"
 )
 
 type Service struct {

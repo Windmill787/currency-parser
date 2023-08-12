@@ -1,14 +1,14 @@
-package app
+package main
 
 import (
 	"log"
 	"time"
 
-	"github.com/Windmill787/currency-parser/internal/client"
-	"github.com/Windmill787/currency-parser/internal/service"
+	"github.com/Windmill787/currency-parser/client"
+	"github.com/Windmill787/currency-parser/service"
 )
 
-func NewApp() {
+func main() {
 	//create http client
 	//create service that depends on client
 	//use service to execute requests using http client
