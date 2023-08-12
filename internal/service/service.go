@@ -12,8 +12,6 @@ func NewService(client *client.Client) *Service {
 	return &Service{client}
 }
 
-func (s *Service) GetPrivatRate() (float64, error) {
-	//use service client to execute http request and parse current rate
-	s.client.PrivatBankClient.ParseRate()
-	return float64(0), nil
+func (s *Service) GetPrivatRate(currency string) (float64, error) {
+	return s.client.PrivatBankClient.ParseRate(currency)
 }

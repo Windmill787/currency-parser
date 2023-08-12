@@ -39,7 +39,7 @@ func NewPrivatClient() *PrivatClient {
 	}
 }
 
-func (c *PrivatClient) ParseRate() (float64, error) {
+func (c *PrivatClient) ParseRate(currency string) (float64, error) {
 	resp, err := c.httpClient.Get(fmt.Sprintf("%s?date=%s", apiUrl, time.Now().Format("02.01.2006")))
 	if err != nil {
 		return float64(0), err
@@ -55,9 +55,11 @@ func (c *PrivatClient) ParseRate() (float64, error) {
 
 	json.Unmarshal(body, &pResp)
 
-	fmt.Println(string(body))
+	for _, rate := range pResp.ExchangeRate {
+		if rate.Currency == currency {
+			return rate.SaleRate, nil
+		}
+	}
 
-	//parse body and return real rate
-	fmt.Println(pResp)
-	return float64(0), nil
+	return float64(0), fmt.Errorf("currency %s not found", currency)
 }

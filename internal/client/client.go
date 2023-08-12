@@ -9,7 +9,7 @@ import (
 )
 
 type BankClient interface {
-	ParseRate() (float64, error)
+	ParseRate(currency string) (float64, error)
 }
 
 type MonoBankClient interface {

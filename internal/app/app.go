@@ -1,6 +1,9 @@
 package app
 
 import (
+	"log"
+	"time"
+
 	"github.com/Windmill787/currency-parser/internal/client"
 	"github.com/Windmill787/currency-parser/internal/service"
 )
@@ -19,5 +22,11 @@ func NewApp() {
 	client := client.NewClient()
 	service := service.NewService(client)
 
-	service.GetPrivatRate()
+	currency := "EUR"
+	rate, err := service.GetPrivatRate(currency)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Printf("[%s] Rate for currency: %s is %.2f\n", time.Now().Format(time.ANSIC), currency, rate)
 }
