@@ -8,6 +8,23 @@ import (
 	"time"
 )
 
+type BankClient interface {
+	ParseRate() (float64, error)
+}
+
+type MonoBankClient interface {
+	BankClient
+}
+
+type PrivatBankClient interface {
+	BankClient
+}
+
+type Client struct {
+	MonoBankClient
+	PrivatBankClient
+}
+
 type loggerRoundTripper struct {
 	writer io.Writer
 	next   http.RoundTripper
@@ -18,16 +35,16 @@ func (l *loggerRoundTripper) RoundTrip(r *http.Request) (*http.Response, error) 
 	return l.next.RoundTrip(r)
 }
 
-func NetClient() *http.Client {
-	return &http.Client{
-		CheckRedirect: func(req *http.Request, via []*http.Request) error {
-			fmt.Println("Redirect")
-			return nil
-		},
-		Transport: &loggerRoundTripper{
-			next:   http.DefaultTransport,
-			writer: os.Stdout,
-		},
-		Timeout: time.Second * 3,
+var DefaultBankClient = &http.Client{
+	Transport: &loggerRoundTripper{
+		next:   http.DefaultTransport,
+		writer: os.Stdout,
+	},
+	Timeout: time.Second * 3,
+}
+
+func NewClient() *Client {
+	return &Client{
+		PrivatBankClient: NewPrivatClient(),
 	}
 }

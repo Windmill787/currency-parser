@@ -1,11 +1,8 @@
 package app
 
 import (
-	"fmt"
-	"io"
-	"log"
-
 	"github.com/Windmill787/currency-parser/internal/client"
+	"github.com/Windmill787/currency-parser/internal/service"
 )
 
 func NewApp() {
@@ -19,21 +16,8 @@ func NewApp() {
 	//set timeout for 1 hour
 	//parse again
 	//if rate is changed notify client, add the change amount to message
-	fmt.Println("Client")
+	client := client.NewClient()
+	service := service.NewService(client)
 
-	client := client.NetClient()
-
-	resp, err := client.Get("http://vseosvita.ua")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer resp.Body.Close()
-
-	_, err = io.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// fmt.Println(string(body))
-	fmt.Println("Response status: ", resp.StatusCode)
+	service.GetPrivatRate()
 }
