@@ -36,5 +36,5 @@ func main() {
 		log.Fatal(err)
 	}
 
-	log.Printf("[%s] Bank={mono} currency={%s} is rate={%.2f}\n", time.Now().Format(time.ANSIC), currency.Code, rate)
+	log.Printf("[%s] Bank={mono  } currency={%s} rate={%.2f}\n", time.Now().Format(time.ANSIC), currency.Code, rate)
 }

@@ -17,15 +17,13 @@ var (
 			next:   http.DefaultTransport,
 			writer: os.Stdout,
 		},
-		Timeout: time.Second * 3,
+		Timeout: time.Second * 10,
 	}
 	availableCurrencies = []*entities.Currency{
 		entities.USD(),
 		entities.EUR(),
 	}
 )
-
-var apiUrl string
 
 type BankClient interface {
 	ParseRate(currency *entities.Currency) (float64, error)

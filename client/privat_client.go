@@ -10,10 +10,6 @@ import (
 	"github.com/Windmill787/currency-parser/entities"
 )
 
-func init() {
-	apiUrl = "https://api.privatbank.ua/p24api/exchange_rates"
-}
-
 type privatResponse struct {
 	Date            string         `json:"date"`
 	Bank            string         `json:"bank"`
@@ -47,7 +43,7 @@ func (c *PrivatClient) ParseRate(currency *entities.Currency) (float64, error) {
 		return float64(0), fmt.Errorf("currency rate for %s is unavailable", currency.Code)
 	}
 
-	resp, err := c.httpClient.Get(fmt.Sprintf("%s?date=%s", apiUrl, time.Now().Format("02.01.2006")))
+	resp, err := c.httpClient.Get(fmt.Sprintf("%s?date=%s", "https://api.privatbank.ua/p24api/exchange_rates", time.Now().Format("02.01.2006")))
 	if err != nil {
 		return float64(0), err
 	}

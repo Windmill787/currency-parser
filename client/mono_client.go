@@ -11,10 +11,6 @@ import (
 	"github.com/Windmill787/currency-parser/entities"
 )
 
-func init() {
-	apiUrl = "https://api.monobank.ua/bank/currency"
-}
-
 type monoCurrency struct {
 	BaseCurrency int     `json:"currencyCodeA"`
 	Currency     int     `json:"currencyCodeB"`
@@ -44,7 +40,7 @@ func (c *MonoClient) ParseRate(currency *entities.Currency) (float64, error) {
 		return float64(0), fmt.Errorf("currency rate for %s is unavailable", currency.Code)
 	}
 
-	resp, err := c.httpClient.Get(apiUrl)
+	resp, err := c.httpClient.Get("https://api.monobank.ua/bank/currency")
 	if err != nil {
 		return float64(0), err
 	}
