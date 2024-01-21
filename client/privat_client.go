@@ -49,6 +49,10 @@ func (c *PrivatClient) ParseRate(currency *entities.Currency) (float64, error) {
 	}
 	defer resp.Body.Close()
 
+	if resp.StatusCode != http.StatusOK {
+		return float64(0), fmt.Errorf("status code is not 200")
+	}
+
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return float64(0), err
